@@ -1,0 +1,18 @@
+class User
+
+  attr_accessor :name, :address_1, :address_2
+
+  def initialize(name, address_1)
+    @name = name
+    @address_1 = address_1
+  end
+
+  def address
+    "#{@address_1} #{@address_2}"
+  end
+
+  def serach(q)
+    Tire.search(q)
+  end
+
+end
