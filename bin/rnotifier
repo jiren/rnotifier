@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+ARGV[0] = 'help' if ARGV.empty?
+
+case ARGV[0]
+  when 'help'
+    puts %Q{
+---- HELP ----
+test  #Test rnotifier configuration is correct and send test exception.
+
+install api-key [environments] #Create config/rnotifier.yaml with api_key and enabled for supplied environments.environments are optionbal, default is production.
+}
+  when 'test'
+    require 'rnotifier'    
+
+    Rnotofier::Config.load_config('config/rnotifier.yml')
+    if Rnotofier::Config.valid?
+      #NOTE: Add test code
+    else
+      puts 'Configuration is invalid. Check api key'
+    end
+  when 'install'
+    if (api_key = ARGV[1]).nil?
+      puts "'api-key' is required. Use like  i.e rnotifier install api-key [environments]"
+    else
+      environments = ARGV[2..-1]
+      Dir.mkdir('config') unless Dir.exists?('config')        
+    
+      File.open('config/rnotifier.yaml', 'w') do |f|
+        f.puts("apikey: #{api_key}\n")
+        f.puts("environments: #{environments.join(', ')}") unless environments.empty?
+        f.puts("capture_code: false")
+        f.close
+      end
+
+      puts "Rnotofier configuration written in config/rnotifier.yaml"
+    end
+end
