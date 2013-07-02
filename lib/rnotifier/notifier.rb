@@ -17,7 +17,9 @@ module Rnotifier
           req.body =  MultiJson.dump(data)
         end
 
-        Rlogger.error("[RNOTIFIER SERVER] Response Status:#{response.status}") unless response.status == 200
+        return true if response.status == 200
+        Rlogger.error("[RNOTIFIER SERVER] Response Status:#{response.status}")
+        false
       end
     end
   end

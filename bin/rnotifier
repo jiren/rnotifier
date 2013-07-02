@@ -11,13 +11,15 @@ test  #Test rnotifier configuration is correct and send test exception.
 install api-key [environments] #Create config/rnotifier.yaml with api_key and enabled for supplied environments.environments are optionbal, default is production.
 }
   when 'test'
+    #$:.unshift(File.dirname(__FILE__) + '/../lib/')
+    require 'rack'
     require 'rnotifier'    
-
-    Rnotofier::Config.load_config('config/rnotifier.yml')
-    if Rnotofier::Config.valid?
-      #NOTE: Add test code
+    require 'rnotifier/config_test.rb'
+    Rnotifier.load_config('config/rnotifier.yaml')
+    if Rnotifier::Config.valid?
+      Rnotifier::ConfigTest.test
     else
-      puts 'Configuration is invalid. Check api key'
+      puts 'Configuration is invalid. Check api key or config'
     end
   when 'install'
     if (api_key = ARGV[1]).nil?

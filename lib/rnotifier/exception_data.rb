@@ -16,34 +16,28 @@ module Rnotifier
       return unless Config.valid?
       return if Config.ignore_exceptions && Config.ignore_exceptions.include?(exception.class.to_s)
 
-
       begin
-        data = if options[:type] == :rack
-                 self.rack_exception_data
-               else
-                 {:exception => self.exception_data, :extra => self.env }
-               end
+        data = options[:type] == :rack ? self.rack_exception_data : {:extra => self.env }
 
-        data[:exception][:code] = ExceptionCode.get(data[:exception][:backtrace]) if Config.capture_code
+        data[:app_env] = Rnotifier::Config.app_env
+        data[:occurred_at] = Time.now.to_s
+        data[:exception] = self.exception_data
         data[:context_data] = Thread.current[:rnotifier_context] if Thread.current[:rnotifier_context]
         data[:data_from] = options[:type]
         data[:rnotifier_client] = Config::CLIENT 
 
-        Notifier.send(data)
+        return Notifier.send(data)
       rescue Exception => e
         Rlogger.error("[NOTIFY] #{e.message}")
         Rlogger.error("[NOTIFY] #{e.backtrace}")
       ensure
         Rnotifier.clear_context
       end
+      false
     end
 
     def rack_exception_data
-      data = {
-        :occurred_at => Time.now.to_s,
-        :app_env => Rnotifier::Config.app_env,
-        :exception => self.exception_data
-      }
+      data = {}
       data[:request] = {
         :url               => request.url,
         :referer_url       => request.referer,
@@ -58,12 +52,14 @@ module Rnotifier
     end
 
     def exception_data
-      {
+      e_data = {
         :class_name => exception.class.to_s,
         :message    => exception.message,
         :backtrace  => exception.backtrace,
         :fingerprint => (self.fingerprint rescue nil)
       }
+      e_data[:code] = ExceptionCode.get(e_data[:backtrace]) if Config.capture_code
+      e_data
     end
 
     def fingerprint

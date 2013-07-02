@@ -36,7 +36,7 @@ describe Rnotifier::ExceptionData do
     expect(request_data[:headers]).to eq headers 
     expect(request_data[:params]).to eq({'foo' => 'bar', 'quux' => 'bla'})
     
-    exception_data = data[:exception]
+    exception_data = e_data.exception_data
     expect(exception_data[:class_name]).to eq @exception.class.to_s
     expect(exception_data[:message]).to eq @exception.message 
   end

@@ -26,6 +26,10 @@ rnotifier install 'API-KEY'  # This will create 'config/rnotifier.yaml' file.
 - capture_code: true         #Default false
 - api_host: 'http://yourapp.com' #Default http://rnotifier.com
 
+### To test config
+
+rnotifier test  #This will send test exception to rnotifier.
+
 ## Contributing
 
 1. Fork it

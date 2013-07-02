@@ -11,7 +11,6 @@ module Rnotifier
       def find(filename, line_no, wrap_size = 1)
         s_range = [line_no - wrap_size, 1].max - 1
         e_range = line_no + wrap_size - 1
-        #s_range, e_range = [ (line_no - wrap_size) > 0 ? line_no - wrap_size : 0, line_no + wrap_size]
         code = [s_range]
 
         begin
