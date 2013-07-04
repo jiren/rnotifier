@@ -1,5 +1,6 @@
 ENV['RACK_ENV'] = 'test'
 
+
 require 'rubygems'
 require 'bundler/setup'
 require 'open-uri'
@@ -7,11 +8,14 @@ require 'rack'
 require 'rack/request'
 require 'rack/mock'
 require 'rack/test'
+require 'coveralls'
 
 $:.unshift(File.dirname(__FILE__) + '/../lib/')
 require 'rnotifier'
 
 require File.dirname(__FILE__) + "/fixtures/fake_app"
+
+Coveralls.wear!
 
 RSpec.configure do |config|
   config.color_enabled = true

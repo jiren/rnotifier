@@ -2,6 +2,8 @@
 
 Exception catcher for rack base applications.
 
+[![Build Status](https://travis-ci.org/jiren/rnotifier.png?branch=master)](https://travis-ci.org/jiren/rnotifier) ![Coverage Status](https://coveralls.io/repos/jiren/rnotifier/badge.png?branch=master)](https://coveralls.io/r/jiren/rnotifier?branch=master)
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -22,13 +24,13 @@ rnotifier install 'API-KEY'  # This will create 'config/rnotifier.yaml' file.
 
 ### Config file options
 
-- environments: development  #Default is production
-- capture_code: true         #Default false
-- api_host: 'http://yourapp.com' #Default http://rnotifier.com
+    environments: development      #default is production
+    capture_code: true             #default false
+    api_host: 'http://yourapp.com' #default http://rnotifier.com
 
 ### To test config
 
-rnotifier test  #This will send test exception to rnotifier.
+    rnotifier test                 #this will send test exception to rnotifier.
 
 ## Contributing
 
