@@ -4,6 +4,7 @@ require 'sinatra/base'
 module RnotifierTest
 
   class FakeApp < Sinatra::Base
+    set :environment, :production
     use Rnotifier::RackMiddleware, 'spec/fixtures/rnotifier_test.yaml'
 
     get '/' do

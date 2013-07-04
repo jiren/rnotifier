@@ -1,3 +1,5 @@
+ENV['RACK_ENV'] = 'test'
+
 require 'rubygems'
 require 'bundler/setup'
 require 'open-uri'
@@ -5,6 +7,8 @@ require 'rack'
 require 'rack/request'
 require 'rack/mock'
 require 'rack/test'
+
+$:.unshift(File.dirname(__FILE__) + '/../lib/')
 require 'rnotifier'
 
 require File.dirname(__FILE__) + "/fixtures/fake_app"
@@ -19,9 +23,6 @@ RSpec.configure do |config|
     Rack::Lint.new(RnotifierTest::FakeApp.new)
   end
 end
-#ENV['RACK_ENV'] = 'test'
-
-$:.unshift(File.dirname(__FILE__) + '/../lib/')
 
 def rnotifier_init
   ENV['RACK_ENV'] = 'test'

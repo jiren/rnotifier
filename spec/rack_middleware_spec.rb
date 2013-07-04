@@ -1,8 +1,6 @@
 $:.unshift(File.dirname(__FILE__))
 require 'spec_helper'
 
-set :environment, :test
-
 describe Rnotifier::RackMiddleware do
 
   before(:all) do
