@@ -19,17 +19,13 @@ RSpec.configure do |config|
     Rack::Lint.new(RnotifierTest::FakeApp.new)
   end
 end
+#ENV['RACK_ENV'] = 'test'
 
 $:.unshift(File.dirname(__FILE__) + '/../lib/')
-
-ENV['RACK_ENV'] = 'test'
 
 def rnotifier_init
   ENV['RACK_ENV'] = 'test'
   Rnotifier.load_config("#{Dir.pwd}/spec/fixtures/rnotifier.yaml")
-end
-
-def set_test_adapter
 end
 
 def stub_faraday_request(opts = {})
