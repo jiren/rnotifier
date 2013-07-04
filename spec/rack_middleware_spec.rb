@@ -12,7 +12,10 @@ describe Rnotifier::RackMiddleware do
   end
 
   it 'sends get request and catch exception' do
-     get "/exception/1"
+     begin
+       get "/exception/1" 
+     rescue Exception => e
+     end
 
      expect(last_response.errors.split(/:\n/).first).to eq @type_error 
      expect(last_response.status).to eq 500
