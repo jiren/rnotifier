@@ -5,7 +5,6 @@ require 'rack'
 require 'rack/request'
 require 'rack/mock'
 require 'rack/test'
-require 'simplecov'
 require 'rnotifier'
 
 require File.dirname(__FILE__) + "/fixtures/fake_app"
