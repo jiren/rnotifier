@@ -20,7 +20,7 @@ module Rnotifier
         data = options[:type] == :rack ? self.rack_exception_data : {:extra => self.env }
 
         data[:app_env] = Rnotifier::Config.app_env
-        data[:occurred_at] = Time.now.to_s
+        data[:occurred_at] = Time.now.utc.to_s
         data[:exception] = self.exception_data
         data[:context_data] = Thread.current[:rnotifier_context] if Thread.current[:rnotifier_context]
         data[:data_from] = options[:type]
@@ -30,8 +30,6 @@ module Rnotifier
       rescue Exception => e
         Rlogger.error("[NOTIFY] #{e.message}")
         Rlogger.error("[NOTIFY] #{e.backtrace}")
-      ensure
-        Rnotifier.clear_context
       end
       false
     end

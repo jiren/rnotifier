@@ -5,6 +5,7 @@ require 'rack'
 require 'rack/request'
 require 'rack/mock'
 require 'rack/test'
+require 'simplecov'
 require 'rnotifier'
 
 require File.dirname(__FILE__) + "/fixtures/fake_app"
@@ -23,8 +24,6 @@ end
 $:.unshift(File.dirname(__FILE__) + '/../lib/')
 
 ENV['RACK_ENV'] = 'test'
-
-require 'rnotifier'
 
 def rnotifier_init
   ENV['RACK_ENV'] = 'test'

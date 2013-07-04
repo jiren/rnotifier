@@ -9,6 +9,7 @@ require 'rnotifier/config'
 require 'rnotifier/rlogger'
 require 'rnotifier/notifier'
 require 'rnotifier/exception_data' 
+require 'rnotifier/event_data' 
 require 'rnotifier/rack_middleware'
 require 'rnotifier/parameter_filter'
 require 'rnotifier/exception_code'
@@ -45,8 +46,12 @@ module Rnotifier
       Thread.current[:rnotifier_context] = nil
     end
 
-    def send_exception(exception, opts = {})
-      Rnotifier::ExceptionData.new(exception, opts, {:type => :rescue}).notify
+    def exception(exception, params = {})
+      Rnotifier::ExceptionData.new(exception, params, {:type => :rescue}).notify
+    end
+
+    def event(name, params = {})
+      Rnotifier::EventData.new(name, params).notify if Rnotifier::Config.valid?
     end
 
   end

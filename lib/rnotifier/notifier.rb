@@ -8,9 +8,9 @@ module Rnotifier
         end
       end
 
-      def send(data)
+      def send(data, url = nil)
         response = self.connection.post do |req|
-          req.url Rnotifier::Config.notification_path
+          req.url(url || Rnotifier::Config.notification_path)
           req.headers['Content-Type'] = 'application/json'
           req.options[:timeout] =  Rnotifier::Config[:http_open_timeout]
           req.options[:open_timeout] = Rnotifier::Config[:http_read_timeout]
@@ -20,6 +20,8 @@ module Rnotifier
         return true if response.status == 200
         Rlogger.error("[RNOTIFIER SERVER] Response Status:#{response.status}")
         false
+      ensure
+        Rnotifier.clear_context
       end
     end
   end
