@@ -10,7 +10,7 @@ module Rnotifier
       :http_read_timeout => 4
     }
 
-    CLIENT = "RRG:#{Rnotifier::VERSION}" #Rnotifier Ruby Gem => RRG
+    CLIENT = "RRG:#{Rnotifier::VERSION}"
 
     class << self
       attr_accessor :api_key, :notification_path, :event_path, :environments, :current_env, 
@@ -47,9 +47,10 @@ module Rnotifier
 
         self.api_host ||= DEFAULT[:api_host]
         self.notification_path = '/' + [DEFAULT[:api_version], DEFAULT[:notify_path], self.api_key].join('/')
-        self.event_path = '/' + [DEFAULT[:api_version], DEFAULT[:event_path], self.api_key].join('/')
         self.app_env = get_app_env
         self.ignore_exceptions = self.ignore_exceptions.split(',') if self.ignore_exceptions.is_a?(String)
+
+        self.event_path = '/' + [DEFAULT[:api_version], DEFAULT[:event_path], self.api_key].join('/')
 
         self.valid = true 
       end

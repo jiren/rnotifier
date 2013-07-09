@@ -17,4 +17,13 @@ describe Rnotifier::EventData do
     expect(e_data.data[:data_from]).to eq :event
   end
 
+  it 'sends event data to server' do
+    path = '/' + [ Rnotifier::Config::DEFAULT[:api_version], Rnotifier::Config::DEFAULT[:event_path], 'API-KEY'].join('/')
+    stubs = stub_faraday_request({:path => path})
+
+    Rnotifier::EventData.new(@name, @data).notify
+
+    expect { stubs.verify_stubbed_calls }.to_not raise_error
+  end
+
 end

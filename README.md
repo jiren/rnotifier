@@ -25,7 +25,7 @@ rnotifier install 'API-KEY'  # This will create 'config/rnotifier.yaml' file.
 
 ### Config file options
 
-    environments: development      #default is production
+    environments: development,test #default is production
     capture_code: true             #default false
     api_host: 'http://yourapp.com' #default http://rnotifier.com
 

@@ -4,7 +4,10 @@ module Rnotifier
 
       def get(backtrace)
         return unless backtrace
-        filename, line, method = (backtrace.find{|l| l =~ /^#{Config.app_env[:app_root]}/} || backtrace[0]).split(':')
+        bline = backtrace.find do |l| 
+          l.index(Config.app_env[:app_root]) == 0 && !Gem.path.any?{|path| l.index(path) == 0}
+        end
+        filename, line, method = (bline|| backtrace[0]).split(':')
         self.find(filename, line.to_i, 3)
       end
 

@@ -1,6 +1,5 @@
 ENV['RACK_ENV'] = 'test'
 
-
 require 'rubygems'
 require 'bundler/setup'
 require 'open-uri'
@@ -12,7 +11,6 @@ require 'coveralls'
 
 $:.unshift(File.dirname(__FILE__) + '/../lib/')
 require 'rnotifier'
-
 require File.dirname(__FILE__) + "/fixtures/fake_app"
 
 Coveralls.wear!
@@ -36,7 +34,7 @@ end
 def stub_faraday_request(opts = {})
   opts[:status] ||= 200
   opts[:message] ||= 'ok'
-  opts[:path] = '/' + [ Rnotifier::Config::DEFAULT[:api_version], Rnotifier::Config::DEFAULT[:notify_path], 'API-KEY'].join('/')
+  opts[:path] ||= '/' + [ Rnotifier::Config::DEFAULT[:api_version], Rnotifier::Config::DEFAULT[:notify_path], 'API-KEY'].join('/')
 
   stubs = Faraday::Adapter::Test::Stubs.new
   conn  = Faraday.new do |builder|
