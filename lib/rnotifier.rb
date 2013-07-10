@@ -47,15 +47,15 @@ module Rnotifier
     end
 
     def exception(exception, params = {})
-      ::ExceptionData.new(exception, params, {:type => :rescue}).notify
+      Rnotifier::ExceptionData.new(exception, params, {:type => :rescue}).notify
     end
 
     def event(name, params = {})
-      ::EventData.new(name, ::EventData::EVENT, params).notify if ::Config.valid?
+      Rnotifier::EventData.new(name, Rnotifier::EventData::EVENT, params).notify if Rnotifier::Config.valid?
     end
 
     def alert(name, params = {})
-      ::EventData.new(name, ::EventData::ALERT, params).notify if ::Config.valid?
+      Rnotifier::EventData.new(name, Rnotifier::EventData::ALERT, params).notify if Rnotifier::Config.valid?
     end
 
   end
