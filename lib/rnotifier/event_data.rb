@@ -2,14 +2,17 @@ module Rnotifier
   class EventData
     attr_reader :data
 
-    def initialize(name, data = {})
+    EVENT = 0
+    ALERT = 1
+
+    def initialize(name, type, data = {})
       @data = {
         :name => name, 
         :data => data,
         :app_env => EventData.app_env,
         :occurred_at => Time.now.utc.to_s,
-        :data_from => :event,
         :rnotifier_client => Config::CLIENT,
+        :type => type,
       }
       @data[:context_data] = Thread.current[:rnotifier_context] if Thread.current[:rnotifier_context]
     end

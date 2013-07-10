@@ -9,12 +9,14 @@ describe Rnotifier::EventData do
     @data = {:id => 1, :name => 'ProductX'}
   end
 
-  it 'is initialize exception_data object' do
-    e_data = Rnotifier::EventData.new(@name, @data)
+  it 'is initialize event_data object' do
+    [:event, :alert].each do |e|
+      e_data = Rnotifier::EventData.new(@name, e, @data)
 
-    expect(e_data.data[:name]).to eq @name
-    expect(e_data.data[:data]).to eq @data
-    expect(e_data.data[:data_from]).to eq :event
+      expect(e_data.data[:name]).to eq @name
+      expect(e_data.data[:data]).to eq @data
+      expect(e_data.data[:type]).to eq e
+    end
   end
 
   it 'sends event data to server' do
