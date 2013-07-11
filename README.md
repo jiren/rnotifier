@@ -36,9 +36,9 @@ rnotifier install 'API-KEY'  # This will create 'config/rnotifier.yaml' file.
 
 ### Send events and alerts
 
-   Rnotifier.event(:sign_up, {:username => 'Jiren', :email => 'jiren@example.com', :using => 'facebook' })
+    Rnotifier.event(:sign_up, {:username => 'Jiren', :email => 'jiren@example.com', :using => 'facebook' })
 
-   Rnotifier.alert(:order_fail, {:user => 'Jiren', :product => 'PS3', :order_id => '321' })
+    Rnotifier.alert(:order_fail, {:user => 'Jiren', :product => 'PS3', :order_id => '321' })
 
 
 ## Contributing
