@@ -15,6 +15,7 @@ install api-key [environments] #Create config/rnotifier.yaml with api_key and en
     require 'rack'
     require 'rnotifier'    
     require 'rnotifier/config_test.rb'
+    ENV['RACK_ENV'] = 'rnotifier_test'
     Rnotifier.load_config('config/rnotifier.yaml')
     if Rnotifier::Config.valid?
       Rnotifier::ConfigTest.test

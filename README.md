@@ -33,6 +33,14 @@ rnotifier install 'API-KEY'  # This will create 'config/rnotifier.yaml' file.
 
     rnotifier test                 #this will send test exception to rnotifier.
 
+
+### Send events and alerts
+
+   Rnotifier.event(:sign_up, {:username => 'Jiren', :email => 'jiren@example.com', :using => 'facebook' })
+
+   Rnotifier.alert(:order_fail, {:user => 'Jiren', :product => 'PS3', :order_id => '321' })
+
+
 ## Contributing
 
 1. Fork it
