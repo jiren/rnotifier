@@ -17,6 +17,12 @@ module RnotifierTest
       [200, {}, 'OK']
     end
 
+    get '/event' do
+      Rnotifier.event(:product, {:id => 1, :name => 'PS3' }, [:create])
+
+      [200, {}, 'OK']
+    end
+
   end
 
 end

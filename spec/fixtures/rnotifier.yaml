@@ -1,2 +1,2 @@
 apikey: API-KEY
-environments: production,staging
+environments: production,staging,test

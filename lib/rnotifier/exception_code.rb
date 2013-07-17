@@ -1,13 +1,23 @@
 module Rnotifier
   class ExceptionCode
+
+    SYNTAX_ERROR_REGX = /\A(.*:\d*):/
+
     class << self
 
-      def get(backtrace)
-        return unless backtrace
-        bline = backtrace.find do |l| 
-          l.index(Config.app_env[:app_root]) == 0 && !Gem.path.any?{|path| l.index(path) == 0}
+      def get(exception)
+        return unless exception.backtrace
+
+        if exception.class == SyntaxError && exception.message.match(SYNTAX_ERROR_REGX)
+          bline = $1 
+        else
+          bline = exception.backtrace.find do |l| 
+            l.index(Config.app_env[:app_root]) == 0 && !Gem.path.any?{|path| l.index(path) == 0}
+          end
         end
+
         filename, line, method = (bline|| backtrace[0]).split(':')
+
         self.find(filename, line.to_i, 3)
       end
 

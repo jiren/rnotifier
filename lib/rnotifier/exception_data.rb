@@ -13,7 +13,7 @@ module Rnotifier
     end
 
     def notify
-      return unless Config.valid?
+      return if !Config.valid?
       return if Config.ignore_exceptions && Config.ignore_exceptions.include?(exception.class.to_s)
 
       begin
@@ -25,7 +25,7 @@ module Rnotifier
         data[:data_from] = options[:type]
         data[:rnotifier_client] = Config::CLIENT 
 
-        return Notifier.send(data)
+        return Notifier.send(data, Config.exception_path)
       rescue Exception => e
         Rlogger.error("[NOTIFY] #{e.message}")
         Rlogger.error("[NOTIFY] #{e.backtrace}")
@@ -36,15 +36,14 @@ module Rnotifier
     def rack_exception_data
       data = {}
       data[:request] = {
-        :url               => request.url,
-        :referer_url       => request.referer,
-        :ip                => request.ip,
-        :http_method       => "#{request.request_method}#{' # XHR' if request.xhr?}",
-        :params            => filtered_params,
-        :headers           => self.headers,
-        :session           => request.session
+        :url          => request.url,
+        :referer_url  => request.referer,
+        :ip           => request.ip,
+        :http_method  => "#{request.request_method}#{' # XHR' if request.xhr?}",
+        :params       => filtered_params,
+        :headers      => self.headers,
+        :session      => request.session
       }
-
       data
     end
 
@@ -55,7 +54,7 @@ module Rnotifier
         :backtrace  => exception.backtrace,
         :fingerprint => (self.fingerprint rescue nil)
       }
-      e_data[:code] = ExceptionCode.get(e_data[:backtrace]) if Config.capture_code
+      e_data[:code] = ExceptionCode.get(exception) if Config.capture_code
       e_data
     end
 

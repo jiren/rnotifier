@@ -3,7 +3,7 @@ module Rnotifier
     DEFAULT = {
       :api_host     => 'http://api.rnotifier.com',
       :api_version  => 'v1', 
-      :notify_path  => 'exception',
+      :exception_path  => 'exception',
       :event_path   => 'event',
       :ignore_env   => ['development', 'test'],
       :http_open_timeout => 2,
@@ -13,7 +13,7 @@ module Rnotifier
     CLIENT = "RRG:#{Rnotifier::VERSION}"
 
     class << self
-      attr_accessor :api_key, :notification_path, :event_path, :environments, :current_env, 
+      attr_accessor :api_key, :exception_path, :event_path, :environments, :current_env, 
         :valid, :app_env, :api_host, :ignore_exceptions, :capture_code
 
       def [](val)
@@ -46,12 +46,11 @@ module Rnotifier
         return if self.api_key.to_s.length == 0
 
         self.api_host ||= DEFAULT[:api_host]
-        self.notification_path = '/' + [DEFAULT[:api_version], DEFAULT[:notify_path], self.api_key].join('/')
+        self.exception_path = '/' + [DEFAULT[:api_version], DEFAULT[:exception_path]].join('/')
         self.app_env = get_app_env
         self.ignore_exceptions = self.ignore_exceptions.split(',') if self.ignore_exceptions.is_a?(String)
 
-        self.event_path = '/' + [DEFAULT[:api_version], DEFAULT[:event_path], self.api_key].join('/')
-
+        self.event_path = '/' + [DEFAULT[:api_version], DEFAULT[:event_path]].join('/')
         self.valid = true 
       end
 
@@ -81,16 +80,6 @@ module Rnotifier
 
       def app_root
         (defined?(Rails) && Rails.respond_to?(:root)) ? Rails.root.to_s : Dir.pwd
-      end
-
-      def event_app_env
-        {
-          :env => self.current_env,
-          :pid => $$,
-          :host => (Socket.gethostname rescue ''),
-          :language => 'ruby',
-          :platform => (RUBY_PLATFORM rescue '')
-        }
       end
 
     end

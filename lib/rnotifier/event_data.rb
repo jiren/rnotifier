@@ -5,7 +5,7 @@ module Rnotifier
     EVENT = 0
     ALERT = 1
 
-    def initialize(name, type, data = {})
+    def initialize(name, type, data = {}, tags = nil)
       @data = {
         :name => name, 
         :data => data,
@@ -15,6 +15,7 @@ module Rnotifier
         :type => type,
       }
       @data[:context_data] = Thread.current[:rnotifier_context] if Thread.current[:rnotifier_context]
+      @data[:tags] = tags if tags
     end
 
     def notify
@@ -27,7 +28,12 @@ module Rnotifier
     end
 
     def self.app_env
-      @env ||= Rnotifier::Config.event_app_env 
+      @app_env ||= {
+        :env => Config.current_env,
+        :pid => $$,
+        :host => (Socket.gethostname rescue ''),
+        :language => 'ruby'
+      }
     end
 
   end

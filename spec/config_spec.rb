@@ -4,9 +4,11 @@ require 'spec_helper'
 describe Rnotifier::Config do
   before(:all) do
     @api_key = 'API-KEY'
-    @notification_path = '/' + [ Rnotifier::Config::DEFAULT[:api_version], 
-                                 Rnotifier::Config::DEFAULT[:notify_path], 
-                                 @api_key].join('/')
+    @exception_path = '/' + [ Rnotifier::Config::DEFAULT[:api_version], 
+                              Rnotifier::Config::DEFAULT[:exception_path]].join('/')
+
+    @event_path = '/' + [ Rnotifier::Config::DEFAULT[:api_version], 
+                              Rnotifier::Config::DEFAULT[:event_path]].join('/')
   end
 
   before(:each) do
@@ -25,7 +27,8 @@ describe Rnotifier::Config do
   it 'has default config values' do
     Rnotifier::Config.tap do |c|
       expect(c.current_env).to eq @environments
-      expect(c.notification_path).to eq @notification_path
+      expect(c.exception_path).to eq @exception_path
+      expect(c.event_path).to eq @event_path
       expect(c.api_key).to eq @api_key
     end
   end
@@ -53,7 +56,7 @@ describe Rnotifier::Config do
     Rnotifier.load_config("#{Dir.pwd}/spec/fixtures/rnotifier.yaml")
 
     expect(Rnotifier::Config.api_key).to eq @api_key
-    expect(Rnotifier::Config.environments).to eq ['production', 'staging']
+    expect(Rnotifier::Config.environments).to eq ['production', 'staging', 'test']
     expect(Rnotifier::Config.valid?).to be_true
   end
 

@@ -1,6 +1,7 @@
 module Rnotifier
 	class Rlogger
 		TAG = '[RNOTIFIER]'
+
 		class << self
 
       ['info', 'error', 'warn'].each do |level|

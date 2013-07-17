@@ -34,7 +34,7 @@ end
 def stub_faraday_request(opts = {})
   opts[:status] ||= 200
   opts[:message] ||= 'ok'
-  opts[:path] ||= '/' + [ Rnotifier::Config::DEFAULT[:api_version], Rnotifier::Config::DEFAULT[:notify_path], 'API-KEY'].join('/')
+  opts[:path] ||= '/' + [ Rnotifier::Config::DEFAULT[:api_version], Rnotifier::Config::DEFAULT[:exception_path]].join('/')
 
   stubs = Faraday::Adapter::Test::Stubs.new
   conn  = Faraday.new do |builder|
