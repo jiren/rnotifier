@@ -19,7 +19,7 @@ module Rnotifier
       begin
         data = options[:type] == :rack ? self.rack_exception_data : {:extra => self.env }
         data[:app_env] = Rnotifier::Config.app_env
-        data[:occurred_at] = Time.now.utc.to_s
+        data[:occurred_at] = Time.now.to_i
         data[:exception] = self.exception_data
         data[:context_data] = Thread.current[:rnotifier_context] if Thread.current[:rnotifier_context]
         data[:data_from] = options[:type]

@@ -10,7 +10,7 @@ module Rnotifier
         :name => name, 
         :data => data,
         :app_env => EventData.app_env,
-        :occurred_at => Time.now.utc.to_s,
+        :occurred_at => Time.now.to_i,
         :rnotifier_client => Config::CLIENT,
         :type => type,
       }
