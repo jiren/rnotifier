@@ -7,6 +7,13 @@ require 'rack'
 require 'rack/request'
 require 'rack/mock'
 require 'rack/test'
+require 'simplecov'
+
+SimpleCov.start do
+  add_filter '/spec/'
+  add_group 'gem', 'lib'
+end
+
 require 'coveralls'
 
 $:.unshift(File.dirname(__FILE__) + '/../lib/')
