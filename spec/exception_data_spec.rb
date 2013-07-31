@@ -56,5 +56,14 @@ describe Rnotifier::ExceptionData do
     expect(params).to include({'useranme' => 'bar'})
   end
 
+  it 'sends exception manually' do
+     stubs = stub_faraday_request
+     params = {:manual_exception => true}
+
+     status = Rnotifier.exception(@exception, params)
+
+     expect(status).to be_true
+     expect {stubs.verify_stubbed_calls }.to_not raise_error
+  end
 
 end

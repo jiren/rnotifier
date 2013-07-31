@@ -24,6 +24,7 @@ module Rnotifier
       rescue Exception => e
         Rlogger.error("[EVENT NOTIFY] #{e.message}")
         Rlogger.error("[EVENT NOTIFY] #{e.backtrace}")
+        false
       end
     end
 

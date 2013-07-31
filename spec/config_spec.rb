@@ -60,4 +60,22 @@ describe Rnotifier::Config do
     expect(Rnotifier::Config.valid?).to be_true
   end
 
+  it 'set config invalid if environments not set in config and app env is test or development' do
+    clear_config
+    ENV['RACK_ENV'] = 'test'
+    
+    Rnotifier.load_config("#{Dir.pwd}/spec/fixtures/rnotifier_ignore_env.yaml")
+
+    expect(Rnotifier::Config.valid?).to be_false
+  end
+
+  it 'set api key from the ENV variable RNOTIFIER_API_KEY' do
+    clear_config
+    ENV['RNOTIFIER_API_KEY'] = 'ENV-API-KEY'
+    Rnotifier::Config.init
+
+    expect(Rnotifier::Config.api_key).to eq 'ENV-API-KEY'
+    ENV['RNOTIFIER_API_KEY'] = nil
+  end
+
 end

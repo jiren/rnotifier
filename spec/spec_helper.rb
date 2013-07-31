@@ -8,19 +8,21 @@ require 'rack/request'
 require 'rack/mock'
 require 'rack/test'
 require 'simplecov'
+require 'coveralls'
 
 SimpleCov.start do
   add_filter '/spec/'
   add_group 'gem', 'lib'
 end
 
-require 'coveralls'
+Coveralls.wear!
 
 $:.unshift(File.dirname(__FILE__) + '/../lib/')
+
 require 'rnotifier'
 require File.dirname(__FILE__) + "/fixtures/fake_app"
+require File.dirname(__FILE__) + '/mock_exception_helper' 
 
-Coveralls.wear!
 
 RSpec.configure do |config|
   config.color_enabled = true
@@ -53,11 +55,9 @@ def stub_faraday_request(opts = {})
   stubs
 end
 
-def mock_exception
-  begin
-    1 + '2'
-  rescue Exception => e
-    return e
-  end
+def clear_config
+  [:api_key, :exception_path, :event_path, :environments, :current_env,
+    :app_env, :api_host, :ignore_exceptions, :capture_code].each do |m|
+      Rnotifier::Config.send("#{m}=", nil)
+    end
 end
-

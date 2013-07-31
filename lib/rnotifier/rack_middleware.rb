@@ -3,7 +3,7 @@ module Rnotifier
 
     def initialize(app, config_file = nil)
       @app = app
-      Rnotifier.load_config(config_file) if config_file 
+      config_file ? Rnotifier.load_config(config_file) : Rnotifier.config 
     end
 
     def call(env)

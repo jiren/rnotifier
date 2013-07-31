@@ -8,8 +8,8 @@ module Rnotifier
       def get(exception)
         return unless exception.backtrace
 
-        if exception.class == SyntaxError && exception.message.match(SYNTAX_ERROR_REGX)
-          bline = $1 
+        if exception.class == SyntaxError && m = exception.message.match(SYNTAX_ERROR_REGX)
+          bline = m[1]
         else
           bline = exception.backtrace.find do |l| 
             l.index(Config.app_env[:app_root]) == 0 && !Gem.path.any?{|path| l.index(path) == 0}

@@ -44,5 +44,23 @@ describe Rnotifier::ExceptionCode do
     end
   end
 
+  it 'collect code lines for exception' do
+    rnotifier_init
+    code =  Rnotifier::ExceptionCode.get(mock_exception)
+    
+    lines = File.readlines(File.dirname(__FILE__) + "/mock_exception_helper.rb")[0..5]
+
+    expect(code).to eq([0].concat(lines))
+  end
+
+  it 'collect code lines for systax error' do
+    rnotifier_init
+    e = mock_syntax_error
+    code =  Rnotifier::ExceptionCode.get(e)
+
+    lines = File.readlines(File.dirname(__FILE__) + "/mock_exception_helper.rb")[6..-1]
+
+    expect(code).to eq([6].concat(lines))
+  end
 
 end

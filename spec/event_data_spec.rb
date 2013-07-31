@@ -32,16 +32,21 @@ describe Rnotifier::EventData do
 
   it 'sends event data to server' do
     stubs = stub_faraday_request({:path => Rnotifier::Config.event_path})
-    Rnotifier::EventData.new(@name, @data).notify
+    status = Rnotifier::EventData.new(@name, @data).notify
 
+    expect(status).to be_true
     expect { stubs.verify_stubbed_calls }.to_not raise_error
   end
 
   it 'sends event data with tags to server' do
-    stubs = stub_faraday_request({:path => Rnotifier::Config.event_path})
-    Rnotifier.event(@name, @data, {:tags => [:new]})
+    [:event, :alert].each do |e|
+      stubs = stub_faraday_request({:path => Rnotifier::Config.event_path})
 
-    expect { stubs.verify_stubbed_calls }.to_not raise_error
+      status = Rnotifier.send(e, @name, @data, {:tags => [:new]})
+
+      expect(status).to be_true
+      expect { stubs.verify_stubbed_calls }.to_not raise_error
+    end
   end
 
 end

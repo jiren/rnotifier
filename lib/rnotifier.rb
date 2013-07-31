@@ -18,7 +18,7 @@ require 'rnotifier/railtie' if defined?(Rails)
 module Rnotifier
   class << self
     def config(&block)
-      yield(Rnotifier::Config)
+      yield(Rnotifier::Config) if block_given?
       Rnotifier::Config.init
     end
 
