@@ -28,7 +28,7 @@ module Rnotifier
       self.config do |c|
         c.api_key = config_yaml['apikey'] 
 
-        ['environments', 'api_host', 'ignore_exceptions', 'capture_code'].each do |f|
+        ['environments', 'api_host', 'ignore_exceptions', 'ignore_bots', 'capture_code'].each do |f|
           c.send("#{f}=", config_yaml[f]) if config_yaml[f]
         end
       end

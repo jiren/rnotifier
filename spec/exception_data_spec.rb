@@ -56,6 +56,24 @@ describe Rnotifier::ExceptionData do
     expect(params).to include({'useranme' => 'bar'})
   end
 
+  it 'match the user agent is bot or not' do
+    e_data = Rnotifier::ExceptionData.new(@exception, @env, @options)
+    expect(e_data.is_bot?(nil)).to be_false
+
+    user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/536.30.1 (KHTML, like Gecko) Version/6.0.5 Safari/536.30.1'
+    expect(e_data.is_bot?(user_agent)).to be_false
+
+    user_agent = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+    env = Rack::MockRequest.env_for(@url, @vars.merge({'HTTP_USER_AGENT' => user_agent}))
+
+    e_data = Rnotifier::ExceptionData.new(@exception, env, @options)
+    expect(e_data.is_bot?(user_agent)).to be_true
+  end
+
+  it 'ignores error for unwanted bot request' do
+   
+  end
+
   it 'sends exception manually' do
      stubs = stub_faraday_request
      params = {:manual_exception => true}

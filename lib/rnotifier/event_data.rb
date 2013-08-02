@@ -14,13 +14,15 @@ module Rnotifier
         :rnotifier_client => Config::CLIENT,
         :type => type,
       }
-      @data[:context_data] = Thread.current[:rnotifier_context] if Thread.current[:rnotifier_context]
+
       @data[:tags] = tags if tags
     end
 
     def notify
+      return false unless Config.valid?
+
       begin
-        Notifier.send(data, Rnotifier::Config.event_path)
+        Notifier.send(data, Config.event_path)
       rescue Exception => e
         Rlogger.error("[EVENT NOTIFY] #{e.message}")
         Rlogger.error("[EVENT NOTIFY] #{e.backtrace}")

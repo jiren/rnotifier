@@ -20,9 +20,8 @@ Coveralls.wear!
 $:.unshift(File.dirname(__FILE__) + '/../lib/')
 
 require 'rnotifier'
-require File.dirname(__FILE__) + "/fixtures/fake_app"
 require File.dirname(__FILE__) + '/mock_exception_helper' 
-
+require File.dirname(__FILE__) + '/fixtures/test_sinatra_app'
 
 RSpec.configure do |config|
   config.color_enabled = true
@@ -31,7 +30,7 @@ RSpec.configure do |config|
   config.include Rack::Test::Methods
 
   def app
-    Rack::Lint.new(RnotifierTest::FakeApp.new)
+    Rack::Lint.new(RnotifierTest::TestSinatraApp.new)
   end
 end
 

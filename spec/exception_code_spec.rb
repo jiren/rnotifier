@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Rnotifier::ExceptionCode do
 
   before(:all) do
-    @file =  Dir.pwd + '/spec/code.text'
+    @file =  Dir.pwd + '/spec/fixtures/code.text'
     @lines = File.readlines(@file)
     @total_lines = 18
   end

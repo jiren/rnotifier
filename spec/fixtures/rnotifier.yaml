@@ -1,2 +1,3 @@
 apikey: API-KEY
 environments: production,staging,test
+ignore_bots: Googlebot

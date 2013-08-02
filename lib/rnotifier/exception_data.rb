@@ -13,8 +13,9 @@ module Rnotifier
     end
 
     def notify
-      return if !Config.valid?
-      return if Config.ignore_exceptions && Config.ignore_exceptions.include?(exception.class.to_s)
+      return false unless Config.valid?
+      return false if Config.ignore_exceptions && Config.ignore_exceptions.include?(exception.class.to_s)
+      return false if @options[:type] == :rack && is_bot?(@request.user_agent)
 
       begin
         data = options[:type] == :rack ? self.rack_exception_data : {:extra => self.env }
@@ -85,6 +86,12 @@ module Rnotifier
       headers
     end
 
+    def is_bot?(agent)
+      return false if agent.nil? || Config.ignore_bots.nil? || Config.ignore_bots.empty? 
+      
+      Config.ignore_bots.each { |bot| return true if (agent =~ Regexp.new(bot)) }
+      false
+    end
 
   end
 end

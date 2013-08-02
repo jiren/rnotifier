@@ -14,7 +14,7 @@ module Rnotifier
 
     class << self
       attr_accessor :api_key, :exception_path, :event_path, :environments, :current_env, 
-        :valid, :app_env, :api_host, :ignore_exceptions, :capture_code
+        :valid, :app_env, :api_host, :ignore_exceptions, :capture_code, :ignore_bots
 
       def [](val)
         DEFAULT[val]
@@ -48,8 +48,10 @@ module Rnotifier
         self.api_host ||= DEFAULT[:api_host]
         self.exception_path = '/' + [DEFAULT[:api_version], DEFAULT[:exception_path]].join('/')
         self.app_env = get_app_env
-        self.ignore_exceptions = self.ignore_exceptions.split(',') if self.ignore_exceptions.is_a?(String)
 
+        self.ignore_exceptions = self.ignore_exceptions.split(',') if self.ignore_exceptions.is_a?(String)
+        self.ignore_bots = self.ignore_bots.split(',') if self.ignore_bots.is_a?(String)
+        
         self.event_path = '/' + [DEFAULT[:api_version], DEFAULT[:event_path]].join('/')
         self.valid = true 
       end
