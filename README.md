@@ -28,6 +28,8 @@ Or install it yourself as:
     environments: development,test #default is production
     capture_code: true             #default false
     api_host: 'http://yourapp.com' #default http://rnotifier.com
+    ignore_exceptions: ActiveRecord::RecordNotFound,AbstractController::ActionNotFound,ActionController::RoutingError
+    ignore_bots: Googlebot
 
 ### To test config
 

@@ -49,8 +49,8 @@ module Rnotifier
         self.exception_path = '/' + [DEFAULT[:api_version], DEFAULT[:exception_path]].join('/')
         self.app_env = get_app_env
 
-        self.ignore_exceptions = self.ignore_exceptions.split(',') if self.ignore_exceptions.is_a?(String)
-        self.ignore_bots = self.ignore_bots.split(',') if self.ignore_bots.is_a?(String)
+        self.ignore_exceptions = self.ignore_exceptions.split(',').map(&:strip) if self.ignore_exceptions.is_a?(String)
+        self.ignore_bots = self.ignore_bots.split(',').map(&:strip) if self.ignore_bots.is_a?(String)
         
         self.event_path = '/' + [DEFAULT[:api_version], DEFAULT[:event_path]].join('/')
         self.valid = true 
