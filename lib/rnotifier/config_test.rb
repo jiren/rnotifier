@@ -7,11 +7,12 @@ module Rnotifier
       begin
         raise TestException.new('Test exception')
       rescue Exception => e
-        if Rnotifier::ExceptionData.new(e, {}).notify
-          puts "Test Exception sent. Login to rnotifier.com and checkout."
+        if status = Rnotifier.exception(e, {})
+          puts "Test Exception sent. Login to www.rnotifier.com and checkout."
         else
-          puts "Problem sending exception to rnotifier.com. Check your API key or config."
+          puts "Problem sending exception to www.rnotifier.com. Check your API key or config."
         end
+        status
       end
     end
 

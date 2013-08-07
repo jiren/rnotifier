@@ -20,6 +20,7 @@ Coveralls.wear!
 $:.unshift(File.dirname(__FILE__) + '/../lib/')
 
 require 'rnotifier'
+require 'rnotifier/config_test'
 require File.dirname(__FILE__) + '/mock_exception_helper' 
 require File.dirname(__FILE__) + '/fixtures/test_sinatra_app'
 
