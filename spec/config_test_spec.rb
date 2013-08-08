@@ -12,6 +12,7 @@ describe Rnotifier::ConfigTest do
      stubs = stub_faraday_request
 
      expect(Rnotifier::ConfigTest.test).to be_true 
+     expect(Rnotifier::Config.api_key).to eq 'API-KEY'
      expect {stubs.verify_stubbed_calls }.to_not raise_error
   end
 
@@ -26,6 +27,7 @@ describe Rnotifier::ConfigTest do
       Rnotifier::Config.init
 
       expect(Rnotifier::Config.valid?).to be_true
+      expect(Rnotifier::Config.api_key).to eq 'API-KEY'
       expect(Rnotifier::ConfigTest.test).to be_true 
       expect {stubs.verify_stubbed_calls }.to_not raise_error
     end
