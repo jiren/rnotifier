@@ -16,7 +16,7 @@ module Rnotifier
           end
         end
 
-        filename, line, method = (bline|| backtrace[0]).split(':')
+        filename, line, method = (bline || exception.backtrace[0]).split(':')
 
         self.find(filename, line.to_i, 3)
       end

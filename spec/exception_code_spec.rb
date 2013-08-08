@@ -63,4 +63,28 @@ describe Rnotifier::ExceptionCode do
     expect(code).to eq([6].concat(lines))
   end
 
+  it 'return nil if backtrace is nil' do
+    rnotifier_init
+
+    e = Exception.new('No backtrace')
+    code =  Rnotifier::ExceptionCode.get(e)
+
+    expect(code).to be_nil
+  end
+
+  it 'return first line of backtrace if exception not a systax error or not rails form app' do
+    rnotifier_init
+    Rnotifier::Config.app_env[:app_root] = '/noroot'
+
+    e = Exception.new('Non app exception')
+    e.set_backtrace([File.dirname(__FILE__) + "/mock_exception_helper.rb:3:in `mock_exception'"])
+
+    code =  Rnotifier::ExceptionCode.get(e)
+    lines = File.readlines(File.dirname(__FILE__) + "/mock_exception_helper.rb")[0..5]
+
+    expect(code).to eq([0].concat(lines))
+    rnotifier_init
+  end
+
+
 end
