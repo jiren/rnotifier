@@ -60,6 +60,13 @@ describe Rnotifier::Config do
     expect(Rnotifier::Config.valid?).to be_true
   end
 
+  it 'strip environments string' do
+    clear_config
+    Rnotifier.load_config("#{Dir.pwd}/spec/fixtures/rnotifier.yaml")
+
+    expect(Rnotifier::Config.environments).to include('test')
+  end
+
   it 'set config invalid if environments not set in config and app env is test or development' do
     clear_config
     ENV['RACK_ENV'] = 'test'
@@ -77,5 +84,11 @@ describe Rnotifier::Config do
     expect(Rnotifier::Config.api_key).to eq 'ENV-API-KEY'
     ENV['RNOTIFIER_API_KEY'] = nil
   end
+
+  it 'app env should have time zone' do
+    env = Rnotifier::Config.get_app_env
+    expect(env[:timezone]).not_to be_nil
+  end
+
 
 end

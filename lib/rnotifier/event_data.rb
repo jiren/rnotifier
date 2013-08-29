@@ -35,7 +35,8 @@ module Rnotifier
         :env => Config.current_env,
         :pid => $$,
         :host => (Socket.gethostname rescue ''),
-        :language => 'ruby'
+        :language => 'ruby',
+        :timezone => (Time.now.zone rescue nil)
       }
     end
 

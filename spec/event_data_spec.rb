@@ -49,4 +49,9 @@ describe Rnotifier::EventData do
     end
   end
 
+  it 'app env should have time zone' do
+    env = Rnotifier::EventData.app_env
+    expect(env[:timezone]).not_to be_nil
+  end
+
 end

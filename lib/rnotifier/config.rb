@@ -28,7 +28,7 @@ module Rnotifier
         self.environments ||= []
 
         if self.environments.is_a?(String) || self.environments.is_a?(Symbol)
-          self.environments = self.environments.to_s.split(',')
+          self.environments = self.environments.to_s.split(',').collect(&:strip)
         end
 
         #Return if config environments not include current env
@@ -70,13 +70,12 @@ module Rnotifier
           :app_root => self.app_root,
           :language => {
             :name => 'ruby',
-            :version => (RUBY_VERSION rescue ''),
-            :patch_level => (RUBY_PATCHLEVEL rescue ''),
+            :version => "#{(RUBY_VERSION rescue '')}-p#{(RUBY_PATCHLEVEL rescue '')}",
             :platform =>  (RUBY_PLATFORM rescue ''),
-            :release_date => (RUBY_RELEASE_DATE rescue ''),
             :ruby_path => Gem.ruby,
             :gem_path => Gem.path
-          }
+          },
+          :timezone => (Time.now.zone rescue nil)
         }
       end
 
