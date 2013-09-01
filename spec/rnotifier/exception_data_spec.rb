@@ -71,17 +71,64 @@ describe Rnotifier::ExceptionData do
   end
 
   it 'ignores error for unwanted bot request' do
-   
+    stubs = stub_faraday_request
+    env = Rack::MockRequest.env_for(@url, {
+     'REQUEST_METHOD' => 'POST',
+     'HTTP_USER_AGENT' => 'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)'
+    })
+
+    status = Rnotifier::ExceptionData.new(@exception, env, {:type => :rack}).notify
+
+    expect(status).to be_false
+    expect {stubs.verify_stubbed_calls }.to raise_error
+  end
+
+  it 'must not ingnore error other then unwanted bot agents' do
+    stubs = stub_faraday_request
+    env = Rack::MockRequest.env_for(@url, {
+     'REQUEST_METHOD' => 'POST',
+     'HTTP_USER_AGENT' => 'Mozilla/5.0 (compatible; CorrectBot'
+    })
+
+    status = Rnotifier::ExceptionData.new(@exception, env, {:type => :rack}).notify
+    expect(status).to be_true
+    expect {stubs.verify_stubbed_calls }.not_to raise_error
+  end
+
+  describe '#ignore_exceptions' do
+    before(:each) do
+      clear_config
+      Rnotifier.load_config("#{Dir.pwd}/spec/fixtures/rnotifier_ignore_exception.yaml")
+      @stubs = stub_faraday_request
+    end
+
+    it 'ignore errors unwanted errors' do
+      class TestRouteNotFound < Exception; end
+      exception = TestRouteNotFound.new('/test route not found')
+      exception.set_backtrace([])
+
+      status = Rnotifier::ExceptionData.new(exception, @env, {:type => :rack}).notify
+
+      expect(status).to be_false
+      expect {@stubs.verify_stubbed_calls }.to raise_error
+    end
+
+    it 'must not ignore_exceptions other then unwanted exceptions' do
+      status = Rnotifier::ExceptionData.new(@exception, @env, {:type => :rack}).notify
+
+      expect(status).to be_true
+      expect {@stubs.verify_stubbed_calls }.not_to raise_error
+    end
   end
 
   it 'sends exception manually' do
-     stubs = stub_faraday_request
-     params = {:manual_exception => true}
+    stubs = stub_faraday_request
+    params = {:manual_exception => true}
 
-     status = Rnotifier.exception(@exception, params)
+    status = Rnotifier.exception(@exception, params)
 
-     expect(status).to be_true
-     expect {stubs.verify_stubbed_calls }.to_not raise_error
+    expect(status).to be_true
+    expect {stubs.verify_stubbed_calls }.to_not raise_error
   end
 
 end

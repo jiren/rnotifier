@@ -15,7 +15,7 @@ module Rnotifier
           req.headers['Api-Key'] = Config.api_key
           req.options[:timeout] =  Config[:http_open_timeout]
           req.options[:open_timeout] = Config[:http_read_timeout]
-          req.body =  MultiJson.dump(data)
+          req.body = MultiJson.dump(data)
         end
 
         return true if response.status == 200

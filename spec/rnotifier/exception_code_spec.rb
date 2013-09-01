@@ -9,6 +9,8 @@ describe Rnotifier::ExceptionCode do
     @total_lines = 18
   end
 
+  let(:mock_exception_file) { Dir.pwd + "/spec/fixtures/mock_exception_methods.rb" }
+
   it 'collect error line' do 
     code = Rnotifier::ExceptionCode.find(@file, 5, 0)
 
@@ -47,20 +49,18 @@ describe Rnotifier::ExceptionCode do
   it 'collect code lines for exception' do
     rnotifier_init
     code =  Rnotifier::ExceptionCode.get(mock_exception)
-    
-    lines = File.readlines(File.dirname(__FILE__) + "/mock_exception_helper.rb")[0..5]
+    lines = File.readlines(mock_exception_file)[0..6]
 
     expect(code).to eq([0].concat(lines))
   end
 
-  it 'collect code lines for systax error' do
+  it 'collect code lines for syntax error' do
     rnotifier_init
     e = mock_syntax_error
     code =  Rnotifier::ExceptionCode.get(e)
+    lines = File.readlines(mock_exception_file)[7..-2]
 
-    lines = File.readlines(File.dirname(__FILE__) + "/mock_exception_helper.rb")[6..-1]
-
-    expect(code).to eq([6].concat(lines))
+    expect(code).to eq([7].concat(lines))
   end
 
   it 'return nil if backtrace is nil' do
@@ -72,15 +72,15 @@ describe Rnotifier::ExceptionCode do
     expect(code).to be_nil
   end
 
-  it 'return first line of backtrace if exception not a systax error or not rails form app' do
+  it 'return first line of backtrace if exception not a syntax error or not rails form app' do
     rnotifier_init
     Rnotifier::Config.app_env[:app_root] = '/noroot'
 
     e = Exception.new('Non app exception')
-    e.set_backtrace([File.dirname(__FILE__) + "/mock_exception_helper.rb:3:in `mock_exception'"])
+    e.set_backtrace(["#{mock_exception_file}:3:in `mock_exception'"])
 
     code =  Rnotifier::ExceptionCode.get(e)
-    lines = File.readlines(File.dirname(__FILE__) + "/mock_exception_helper.rb")[0..5]
+    lines = File.readlines(mock_exception_file)[0..5]
 
     expect(code).to eq([0].concat(lines))
     rnotifier_init

@@ -14,6 +14,7 @@ require 'rnotifier/rack_middleware'
 require 'rnotifier/parameter_filter'
 require 'rnotifier/exception_code'
 require 'rnotifier/railtie' if defined?(Rails)
+require 'rnotifier/benchmark'
 
 module Rnotifier
   class << self
