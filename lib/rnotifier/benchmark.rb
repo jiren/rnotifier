@@ -1,14 +1,14 @@
 module Rnotifier
-  class BenchMarkException < Exception; end
+  class BenchmarkException < Exception; end
 
-  class BenchMark
+  class Benchmark
     BENCHMARK = 2
 
     def self.it(name, opts = {}, &block)
       output = nil
       exception = nil
 
-      raise BenchMarkException.new("Code block require :#{name}") unless block_given?
+      raise BenchmarkException.new("Code block require :#{name}") unless block_given?
 
       t1 = Time.now
       begin
