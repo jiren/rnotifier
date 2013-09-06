@@ -15,24 +15,25 @@ module Rnotifier
         output = yield 
       rescue Exception => e
         exception = e
-        exception.backtrace.shift(2) if exception.backtrace
+        #exception.backtrace.shift(opts[:_from] == :proxy ? 4 : 2) if exception.backtrace
+        opts[:_exception] = exception.message
       end
 
-      self._collect(name, t1, Time.now, exception, opts)
+      self._collect(name, Time.now - t1, opts)
 
       raise exception if exception
       return output
     end
 
-    private
-    def self._collect(name, t1, t2, exception, opts = {})
-      params = { bm_time: (t2 - t1) }
-      params[:data] = opts[:params] if opts[:params]
-      params[:exception] = exception.message if exception
+    def self._collect(name, bm_time, opts)
+      return if opts[:time_condition] && opts[:time_condition] >= bm_time
 
-      notify = true
-      notify = false if opts[:time_condition] && opts[:time_condition] >= params[:bm_time]
-      Rnotifier::EventData.new(name, BENCHMARK, params).notify if notify
+      params = { bm_time: bm_time}
+      params[:data] = opts[:params] if opts[:params]
+      params[:exception] = opts[:_exception] if opts[:_exception]
+      params[:args] = opts[:args] if opts[:args]
+
+      Rnotifier::EventData.new(name, BENCHMARK, params).notify
     end
 
   end

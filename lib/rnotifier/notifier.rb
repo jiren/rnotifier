@@ -15,6 +15,7 @@ module Rnotifier
           req.headers['Api-Key'] = Config.api_key
           req.options[:timeout] =  Config[:http_open_timeout]
           req.options[:open_timeout] = Config[:http_read_timeout]
+          #req.body = Yajl::Encoder.new.encode(data) 
           req.body = MultiJson.dump(data)
         end
 
@@ -23,6 +24,14 @@ module Rnotifier
         false
       ensure
         Rnotifier.clear_context
+      end
+
+      def init
+        @connection = Faraday.new(:url => Config.api_host) do |faraday|
+          faraday.adapter Faraday.default_adapter  
+        end
+
+        @json_encoder = Yajl::Encoder.new
       end
     end
   end

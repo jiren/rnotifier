@@ -1,4 +1,5 @@
 ENV['RACK_ENV'] = 'test'
+ENV['TEST_DEBUG'] = 'true'
 
 require 'rubygems'
 require 'bundler/setup'
@@ -36,6 +37,10 @@ RSpec.configure do |config|
 
   def app
     Rack::Lint.new(RnotifierTest::TestSinatraApp.new)
+  end
+
+  config.after(:suite) do
+    ENV.delete('TEST_DEBUG')
   end
 
 end
