@@ -2,6 +2,7 @@ require 'socket'
 require 'yaml'
 require 'digest/md5'
 require 'multi_json'
+require 'json' unless Object.respond_to?(:to_json) 
 require 'faraday'
 
 require 'rnotifier/version'
