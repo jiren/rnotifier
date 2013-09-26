@@ -1,5 +1,5 @@
 ENV['RACK_ENV'] = 'test'
-ENV['TEST_DEBUG'] = 'true'
+ENV['RN_DEBUG'] = 'true'
 
 require 'rubygems'
 require 'bundler/setup'

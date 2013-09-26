@@ -11,20 +11,22 @@ module RnotifierHelper
     opts[:path] ||= '/' + [ Rnotifier::Config::DEFAULT[:api_version], Rnotifier::Config::DEFAULT[:exception_path]].join('/')
 
     stubs = Faraday::Adapter::Test::Stubs.new
-    conn  = Faraday.new do |conn|
-      conn.adapter :test, stubs
+    conn  = Faraday.new do |c|
+      c.adapter :test, stubs
     end
+
     stubs.post(opts[:path]) do |env|
       LastRequest.env = env 
       [opts[:status], {}, opts[:message]] 
     end
 
     Rnotifier::Notifier.instance_variable_set('@connection', conn)
+    #Rnotifier::Notifier.connection = conn
     stubs
   end
 
   def clear_config
-    [:api_key, :exception_path, :event_path, :environments, :current_env,
+    [:api_key, :exception_path, :messages_path, :environments, :current_env,
       :app_env, :api_host, :ignore_exceptions, :capture_code].each do |m|
       Rnotifier::Config.send("#{m}=", nil)
       end

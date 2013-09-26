@@ -6,8 +6,8 @@ describe Rnotifier::Config do
     @exception_path = '/' + [ Rnotifier::Config::DEFAULT[:api_version], 
                               Rnotifier::Config::DEFAULT[:exception_path]].join('/')
 
-    @event_path = '/' + [ Rnotifier::Config::DEFAULT[:api_version], 
-                              Rnotifier::Config::DEFAULT[:event_path]].join('/')
+    @messages_path = '/' + [ Rnotifier::Config::DEFAULT[:api_version], 
+                              Rnotifier::Config::DEFAULT[:messages_path]].join('/')
   end
 
   before(:each) do
@@ -27,7 +27,7 @@ describe Rnotifier::Config do
     Rnotifier::Config.tap do |c|
       expect(c.current_env).to eq @environments
       expect(c.exception_path).to eq @exception_path
-      expect(c.event_path).to eq @event_path
+      expect(c.messages_path).to eq @messages_path
       expect(c.api_key).to eq @api_key
     end
   end
@@ -35,6 +35,7 @@ describe Rnotifier::Config do
   it 'is invalid if config environments not include current env' do
     ENV['RACK_ENV'] = 'staging'
     Rnotifier.config{|c| c.environments = 'production'}
+
     expect(Rnotifier::Config.valid?).to be_false
   end
 
@@ -86,7 +87,7 @@ describe Rnotifier::Config do
 
   it 'app env should have time zone' do
     env = Rnotifier::Config.get_app_env
-    expect(env[:timezone]).not_to be_nil
+    expect(env[:time_zone]).not_to be_nil
   end
 
 

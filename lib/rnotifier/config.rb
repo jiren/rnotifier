@@ -1,11 +1,12 @@
 module Rnotifier
   class Config
     DEFAULT = {
-      :api_host     => 'http://api.rnotifier.com',
-      :api_version  => 'v1', 
-      :exception_path  => 'exception',
-      :event_path   => 'event',
-      :ignore_env   => %w(development test cucumber selenium),
+      :api_host          => 'http://api.rnotifier.com',
+      :api_version       => 'v1', 
+      :exception_path    => 'exception',
+      :messages_path     => 'event',
+      :browser_path      => 'browser',
+      :ignore_env        => %w(development test cucumber selenium),
       :http_open_timeout => 2,
       :http_read_timeout => 4
     }
@@ -13,9 +14,9 @@ module Rnotifier
     CLIENT = "RRG:#{Rnotifier::VERSION}"
 
     class << self
-      attr_accessor :api_key, :environments, :current_env, :app_env, :api_host, :capture_code, :valid
+      attr_accessor :api_key, :app_id, :environments, :current_env, :app_env, :api_host, :capture_code, :valid
       attr_accessor :ignore_bots, :ignore_exceptions
-      attr_accessor :exception_path, :event_path, :benchmake_path
+      attr_accessor :exception_path, :messages_path, :browser_path
 
       def [](val)
         DEFAULT[val]
@@ -28,7 +29,7 @@ module Rnotifier
         return unless self.init_env && self.init_api_options
 
         self.init_igonore_options
-        self.app_env = get_app_env
+        self.app_env = get_app_env(:complete)
         self.valid = true 
       end
 
@@ -36,11 +37,56 @@ module Rnotifier
         self.valid
       end
 
-      def get_app_env
-        {
-          :env => self.current_env,
-          :pid => $$,
+      def app_root
+        (defined?(Rails) && Rails.respond_to?(:root)) ? Rails.root.to_s : Dir.pwd
+      end
+
+      def init_env
+        self.current_env = ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development' 
+        self.environments ||= []
+
+        if self.environments.is_a?(String)
+          self.environments = self.environments.split(',').map(&:strip)
+        end
+
+        #Return if config environments not include current env
+        return self.environments.include?(self.current_env) unless self.environments.empty?
+        
+        #Check for ignore env
+        !DEFAULT[:ignore_env].include?(self.current_env) 
+      end
+
+      def init_igonore_options
+        [:ignore_exceptions, :ignore_bots].each do |f|
+          value = self.send(f)
+          value = value && value.is_a?(String) ? value.split(',').map(&:strip) : []
+          self.send("#{f}=", value)
+        end
+      end
+
+      def init_api_options
+        self.api_key ||= ENV['RNOTIFIER_API_KEY']
+        return false if self.api_key.to_s.strip.empty? || self.app_id.to_s.strip.empty?
+
+        self.api_host ||= DEFAULT[:api_host]
+
+        [:exception_path, :messages_path, :browser_path].each do |path|
+          self.send("#{path}=", "/#{DEFAULT[:api_version]}/#{DEFAULT[path]}")
+        end
+      end
+
+      def get_app_env(type = :complete)
+        env = {
+          :env => Config.current_env,
+          :pid => Process.pid,
           :host => (Socket.gethostname rescue ''),
+          :language => 'ruby',
+          :time_zone => (Time.now.to_s.split.last rescue nil),
+          :client => CLIENT 
+        }
+        
+        return env unless type == :complete
+        env.merge({
           :user_name => ENV['USER'] || ENV['USERNAME'],
           :program_name => $PROGRAM_NAME,
           :app_root => self.app_root,
@@ -51,53 +97,7 @@ module Rnotifier
             :ruby_path => Gem.ruby,
             :gem_path => Gem.path
           },
-          :timezone => (Time.now.zone rescue nil)
-        }
-      end
-
-      def app_root
-        (defined?(Rails) && Rails.respond_to?(:root)) ? Rails.root.to_s : Dir.pwd
-      end
-
-      def init_notifier
-        Notifier.init
-      end
-      
-      def init_env
-        self.current_env = ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development' 
-        self.environments ||= []
-
-        if self.environments.is_a?(String)
-          self.environments = self.environments.to_s.split(',').collect(&:strip)
-        end
-
-        return true if self.environments.include?(self.current_env)
-        
-
-        #Check for ignore env
-        if DEFAULT[:ignore_env].include?(self.current_env) && !self.environments.include?(self.current_env) 
-          return false
-        end
-
-        true
-      end
-
-      def init_igonore_options
-        [:ignore_exceptions, :ignore_bots].each do |f|
-          value = self.send(f)
-          self.send("#{f}=", value.split(',').map(&:strip)) if value && value.is_a?(String)
-        end
-      end
-
-      def init_api_options
-        self.api_key ||= ENV['RNOTIFIER_API_KEY']
-        return false if self.api_key.to_s.strip.empty?
-
-        self.api_host ||= DEFAULT[:api_host]
-
-        [:exception_path, :event_path, :benchmake_path].each do |path|
-          self.send("#{path}=", "/#{DEFAULT[:api_version]}/#{DEFAULT[path]}")
-        end
+        })
       end
 
     end

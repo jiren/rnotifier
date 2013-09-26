@@ -120,14 +120,33 @@ describe Rnotifier::ExceptionData do
     end
   end
 
-  it 'sends exception manually' do
-    stubs = stub_faraday_request
-    params = {:manual_exception => true}
+  describe "#manual_sending" do
 
-    status = Rnotifier.exception(@exception, params)
+    it 'sends exception' do
+      stubs = stub_faraday_request
+      params = {:manual_exception => true}
 
-    expect(status).to be_true
-    expect {stubs.verify_stubbed_calls }.to_not raise_error
+      status = Rnotifier.exception(@exception, params)
+
+      expect(status).to be_true
+      expect {stubs.verify_stubbed_calls }.to_not raise_error
+    end
+
+    it 'sends exception with request' do
+      stubs = stub_faraday_request
+      params = {'request' => @env, 'manual_exception' => true}
+
+      status = Rnotifier.exception(@exception, params)
+
+      expect(status).to be_true
+      expect {stubs.verify_stubbed_calls }.to_not raise_error
+
+      request_body = LastRequest.env[:body]
+
+      expect(request_body['request']).not_to be_nil
+      expect(request_body['context_data']).to eq({'manual_exception' => true})
+    end
   end
+
 
 end

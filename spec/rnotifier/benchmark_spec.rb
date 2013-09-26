@@ -7,26 +7,27 @@ describe Rnotifier::Benchmark do
   end
 
   before(:each) do
-    @stub = stub_faraday_request({:path => Rnotifier::Config.event_path})
+    Rnotifier::MessageStore.clear
   end
 
   it 'benchmark code block' do
     result = Rnotifier::Benchmark.it(:test) { MockMethods.sum() }
     expect(result).to eq 10000
-    expect { @stub.verify_stubbed_calls }.to_not raise_error
+
+    expect(Rnotifier::MessageStore.size).to eq 1
   end
 
   it 'benchmark code block by time trap condition' do
     result = Rnotifier::Benchmark.it(:test, {:time_condition => 0}) { MockMethods.sum() }
     expect(result).to eq 10000
-    expect { @stub.verify_stubbed_calls }.to_not raise_error
+    expect(Rnotifier::MessageStore.size).to eq 1
   end
 
   it 'will not going to send benchmark data if time_condition value less then benchmark time' do
     result = Rnotifier::Benchmark.it(:test, {:time_condition => 2}) { MockMethods.sum() }
 
     expect(result).to eq 10000
-    expect { @stub.verify_stubbed_calls }.to raise_error
+    expect(Rnotifier::MessageStore.size).to eq 0
   end
 
   it 'raise excetion from the benchmark code bock' do
