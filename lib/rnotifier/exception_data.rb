@@ -51,19 +51,10 @@ module Rnotifier
       e_data = {
         :class_name => exception.class.to_s,
         :message    => exception.message,
-        :backtrace  => exception.backtrace,
-        :fingerprint => (self.fingerprint rescue nil)
+        :backtrace  => exception.backtrace
       }
       e_data[:code] = ExceptionCode.get(exception) if Config.capture_code
       e_data
-    end
-
-    def fingerprint
-      #data[:fingerprint] = Digest::MD5.hexdigest("#{exception.message.gsub(/#<\w*:\w*>/, '')}#{data[:fingerprint]}")
-
-      if exception.backtrace && !exception.backtrace.empty?
-        Digest::MD5.hexdigest(exception.backtrace.join)
-      end
     end
 
     def filtered_params

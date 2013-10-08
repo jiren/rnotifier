@@ -59,7 +59,9 @@ module Rnotifier
     end
 
     def exception(exception, params = {})
-      if request = (params.delete(:request)|| params.delete('request'))
+      request = (params.delete(:request)|| params.delete('request'))
+
+      if request 
         self.context(params)
         Rnotifier::ExceptionData.new(exception, request, params.merge(:type => :rack)).notify
       else
