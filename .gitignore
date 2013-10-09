@@ -1,5 +1,6 @@
 *.gem
 *.rbc
+*.swp
 .DS_Store
 .bundle
 .config
@@ -19,3 +20,4 @@ tmp
 log
 config/
 *.diff
+diff

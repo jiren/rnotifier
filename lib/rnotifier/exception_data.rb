@@ -14,19 +14,18 @@ module Rnotifier
 
     def notify
       return false unless Config.valid?
-      return false if Config.ignore_exceptions && Config.ignore_exceptions.include?(exception.class.to_s)
-      return false if @options[:type] == :rack && is_bot?(@request.user_agent)
+      return false if Config.ignore_exceptions.include?(exception.class.to_s)
+      return false if options[:type] == :rack && is_bot?(request.user_agent)
 
       begin
         data = options[:type] == :rack ? self.rack_exception_data : {:extra => self.env }
-        data[:app_env] = Rnotifier::Config.app_env
+        data[:env] = Rnotifier::Config.app_env
         data[:occurred_at] = Time.now.to_i
         data[:exception] = self.exception_data
         data[:context_data] = Thread.current[:rnotifier_context] if Thread.current[:rnotifier_context]
         data[:data_from] = options[:type]
-        data[:rnotifier_client] = Config::CLIENT 
 
-        return Notifier.send(data, Config.exception_path)
+        return Notifier.send_data(data, Config.exception_path)
       rescue Exception => e
         Rlogger.error("[NOTIFY] #{e.message}")
         Rlogger.error("[NOTIFY] #{e.backtrace}")
@@ -52,19 +51,10 @@ module Rnotifier
       e_data = {
         :class_name => exception.class.to_s,
         :message    => exception.message,
-        :backtrace  => exception.backtrace,
-        :fingerprint => (self.fingerprint rescue nil)
+        :backtrace  => exception.backtrace
       }
       e_data[:code] = ExceptionCode.get(exception) if Config.capture_code
       e_data
-    end
-
-    def fingerprint
-      #data[:fingerprint] = Digest::MD5.hexdigest("#{exception.message.gsub(/#<\w*:\w*>/, '')}#{data[:fingerprint]}")
-
-      if exception.backtrace && !exception.backtrace.empty?
-        Digest::MD5.hexdigest(exception.backtrace.join)
-      end
     end
 
     def filtered_params
@@ -87,7 +77,7 @@ module Rnotifier
     end
 
     def is_bot?(agent)
-      return false if agent.nil? || Config.ignore_bots.nil? || Config.ignore_bots.empty? 
+      return false if agent.nil? || Config.ignore_bots.empty? 
       
       Config.ignore_bots.each { |bot| return true if (agent =~ Regexp.new(bot)) }
       false

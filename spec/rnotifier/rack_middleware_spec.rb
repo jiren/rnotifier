@@ -1,4 +1,3 @@
-$:.unshift(File.dirname(__FILE__))
 require 'spec_helper'
 
 describe Rnotifier::RackMiddleware do
@@ -11,7 +10,7 @@ describe Rnotifier::RackMiddleware do
     @stubs = stub_faraday_request
   end
 
-  it 'sends get request and catch exception' do
+  it 'sends get request and catche exception' do
     get "/exception/1" 
 
     expect(last_response.errors.split(/:\n/).first).to eq @type_error 

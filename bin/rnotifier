@@ -1,43 +1,90 @@
 #!/usr/bin/env ruby
 
-ARGV[0] = 'help' if ARGV.empty?
+require 'optparse'
 
-case ARGV[0]
-  when 'help'
-    puts %Q{
----- HELP ----
-test  #Test rnotifier configuration is correct and send test exception.
+class RnotofierCLI
+  attr_accessor :options
 
-install api-key [environments] #Create config/rnotifier.yaml with api_key and enabled for supplied environments.environments are optionbal, default is production.
-}
-  when 'test'
+  def initialize
+    @options = {:type => ARGV[0]}
+  end
+
+  def option_parser
+    @option_parser ||= OptionParser.new do |opts|
+      opts.banner = "Usage: rnotifier install -k api-key -i app-id [-e environments]"
+
+      opts.on('-h', 'Help') do
+        puts opts
+        puts 'i.e rnotifier install -k API-KEY -i APP-ID staging,production'
+        exit
+      end
+
+      opts.on("-k api_key") do |v|
+        self.options[:api_key] = v
+      end
+
+      opts.on("-i app_id") do |v|
+        self.options[:app_id] = v
+      end
+
+      opts.on("-e [environments]") do |v|
+        self.options[:environments] = v if v
+      end
+    end
+  end
+
+  def generate
+    case options[:type]
+    when 'install'
+      install
+    when  'test'
+      send_test_exception
+    else
+      ARGV[0] = '-h'
+      option_parser.parse!
+    end
+  end
+
+  def install
+    option_parser.parse!
+
+    if options[:app_id].nil? || options[:api_key].nil?
+      ARGV[0] = '-h'
+      option_parser.parse!
+    end
+
+    Dir.mkdir('config') unless Dir.exists?('config')        
+
+    File.open('config/rnotifier.yaml', 'w') do |f|
+      f.puts("apikey: '#{options[:api_key]}'\n")
+      f.puts("app_id: '#{options[:app_id]}'\n")
+      f.puts("environments: #{options[:environments]}") if options[:environments]
+      f.puts("capture_code: false")
+      f.close
+    end
+
+    puts "Rnotofier configuration written in config/rnotifier.yaml"
+  end
+
+  def send_test_exception
     #$:.unshift(File.dirname(__FILE__) + '/../lib/')
     require 'rack'
     require 'rnotifier'    
     require 'rnotifier/config_test.rb'
+
     ENV['RACK_ENV'] = 'rnotifier_test'
+
     Rnotifier.load_config('config/rnotifier.yaml')
     Rnotifier::Config.environments = [ENV['RACK_ENV']]
     Rnotifier::Config.init
+
     if Rnotifier::Config.valid?
       Rnotifier::ConfigTest.test
     else
-      puts 'Configuration is invalid. Check api key or config'
+      puts 'Configuration is invalid. Check config/rnotifier.yaml'
     end
-  when 'install'
-    if (api_key = ARGV[1]).nil?
-      puts "'api-key' is required. Use like  i.e rnotifier install api-key [environments]"
-    else
-      environments = ARGV[2..-1]
-      Dir.mkdir('config') unless Dir.exists?('config')        
-    
-      File.open('config/rnotifier.yaml', 'w') do |f|
-        f.puts("apikey: #{api_key}\n")
-        f.puts("environments: #{environments.join(', ')}") unless environments.empty?
-        f.puts("capture_code: false")
-        f.close
-      end
-
-      puts "Rnotofier configuration written in config/rnotifier.yaml"
-    end
+  end
 end
+
+RnotofierCLI.new.generate
+

@@ -15,6 +15,8 @@ module Rnotifier
           app.middleware.use Rnotifier::RackMiddleware
         end
       end
+
+      Rnotifier::BenchmarkFilters.load_bm_filters
     end
 
   end

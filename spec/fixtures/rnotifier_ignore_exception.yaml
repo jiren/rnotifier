@@ -1,4 +1,4 @@
 apikey: API-KEY
 app_id: APP-ID
 environments: production,staging,  test
-ignore_bots: Googlebot, bingbot
+ignore_exceptions:  TestRouteNotFound, RecordNotFound

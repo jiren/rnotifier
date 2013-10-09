@@ -27,7 +27,6 @@ Or install it yourself as:
 
     environments: development,test #default is production
     capture_code: true             #default false
-    api_host: 'http://yourapp.com' #default http://rnotifier.com
     ignore_exceptions: ActiveRecord::RecordNotFound,AbstractController::ActionNotFound,ActionController::RoutingError
     ignore_bots: Googlebot
 
@@ -35,6 +34,15 @@ Or install it yourself as:
 
     rnotifier test                 #this will send test exception to rnotifier.
 
+
+### Send exception with request manually
+    For this ':request' params require
+
+    Rnotifier.exception(exception, {:request => request, other_params => 'value'})
+
+### Add context data to exception
+
+    Rnotifier.context({user_email: current_user.email})
 
 ### Send events and alerts
 
@@ -51,7 +59,6 @@ i.e
       {:username => 'Jiren', :email => 'jiren@example.com', :using => 'facebook' },
       {:tags => ['newsletter']}
     )
-
 
 
 ## Contributing
