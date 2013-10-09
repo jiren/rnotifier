@@ -24,7 +24,7 @@ require 'rnotifier/message_store'
 
 module Rnotifier
 
-  class RnotifierException < Exception; end
+  RnotifierException = Class.new(Exception)
 
   class << self
     def config(&block)

@@ -5,8 +5,8 @@ module Rnotifier
       undef_method(m) if m.to_s !~ /(?:^__|^nil\?$|^send$|^object_id$)/
     end
 
-    RBenchmark = ::Object.const_get('Rnotifier::Benchmark')
     Klass      = ::Object.const_get('Class')
+    RBenchmark = ::Object.const_get('Rnotifier').const_get('Benchmark')
 
     def initialize(target, opts = {})
       @target = target

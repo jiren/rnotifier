@@ -1,8 +1,6 @@
 module Rnotifier
   class Benchmark
 
-    RnotifierException = Class.new(Exception)
-
     BM_FIELDS = [:exception, :args]
 
     def self.it(bm_name, opts = {}, &block)
