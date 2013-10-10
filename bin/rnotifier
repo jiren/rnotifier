@@ -56,7 +56,7 @@ class RnotofierCLI
     Dir.mkdir('config') unless Dir.exists?('config')        
 
     File.open('config/rnotifier.yaml', 'w') do |f|
-      f.puts("apikey: '#{options[:api_key]}'\n")
+      f.puts("api_key: '#{options[:api_key]}'\n")
       f.puts("app_id: '#{options[:app_id]}'\n")
       f.puts("environments: #{options[:environments]}") if options[:environments]
       f.puts("capture_code: false")

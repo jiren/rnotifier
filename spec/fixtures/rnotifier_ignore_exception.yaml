@@ -1,4 +1,4 @@
-apikey: API-KEY
+api_key: API-KEY
 app_id: APP-ID
 environments: production,staging,  test
 ignore_exceptions:  TestRouteNotFound, RecordNotFound

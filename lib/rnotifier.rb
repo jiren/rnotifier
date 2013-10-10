@@ -36,7 +36,7 @@ module Rnotifier
       config_yaml = YAML.load_file(file)
 
       self.config do |c|
-        c.api_key = config_yaml['apikey'] 
+        c.api_key = config_yaml['api_key'] 
         c.app_id  = config_yaml['app_id']
 
         ['environments', 'api_host', 'ignore_exceptions', 'ignore_bots', 'capture_code'].each do |f|
