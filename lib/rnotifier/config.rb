@@ -29,7 +29,7 @@ module Rnotifier
         return unless self.init_env && self.init_api_options
 
         self.init_igonore_options
-        self.app_env = get_app_env(:complete)
+        self.app_env = detailed_env
         self.valid = true 
       end
 
@@ -75,8 +75,8 @@ module Rnotifier
         end
       end
 
-      def get_app_env(type = :complete)
-        env = {
+      def basic_env
+        {
           :env => Config.current_env,
           :pid => Process.pid,
           :host => (Socket.gethostname rescue ''),
@@ -84,9 +84,10 @@ module Rnotifier
           :time_zone => (Time.now.to_s.split.last rescue nil),
           :client => CLIENT 
         }
-        
-        return env unless type == :complete
-        env.merge({
+      end
+
+      def detailed_env
+        basic_env.merge({
           :user_name => ENV['USER'] || ENV['USERNAME'],
           :program_name => $PROGRAM_NAME,
           :app_root => self.app_root,

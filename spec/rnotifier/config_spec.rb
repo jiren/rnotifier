@@ -86,7 +86,7 @@ describe Rnotifier::Config do
   end
 
   it 'app env should have time zone' do
-    env = Rnotifier::Config.get_app_env
+    env = Rnotifier::Config.basic_env
     expect(env[:time_zone]).not_to be_nil
   end
 

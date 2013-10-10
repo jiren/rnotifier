@@ -25,6 +25,12 @@ module Rnotifier
         @logger
       end
 
+      def exception(e, tag = '')
+        self.error("[#{tag}] #{e.message}")
+        self.error("[#{tag}] #{e.backtrace}")
+        return false
+      end
+
 		end
 	end
 end

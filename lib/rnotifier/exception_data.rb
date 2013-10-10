@@ -18,19 +18,20 @@ module Rnotifier
       return false if options[:type] == :rack && is_bot?(request.user_agent)
 
       begin
-        data = options[:type] == :rack ? self.rack_exception_data : {:extra => self.env }
-        data[:env] = Rnotifier::Config.app_env
-        data[:occurred_at] = Time.now.to_i
-        data[:exception] = self.exception_data
-        data[:context_data] = Thread.current[:rnotifier_context] if Thread.current[:rnotifier_context]
-        data[:data_from] = options[:type]
-
-        return Notifier.send_data(data, Config.exception_path)
+        return Notifier.send_data(self.data, Config.exception_path)
       rescue Exception => e
-        Rlogger.error("[NOTIFY] #{e.message}")
-        Rlogger.error("[NOTIFY] #{e.backtrace}")
-        false
+        Rlogger.exception(e, 'NOTIFY')
       end
+    end
+
+    def data
+      data = options[:type] == :rack ? self.rack_exception_data : {:extra => self.env }
+      data[:env] = Rnotifier::Config.app_env
+      data[:occurred_at] = Time.now.to_i
+      data[:exception] = self.exception_data
+      data[:context_data] = Thread.current[:rnotifier_context] if Thread.current[:rnotifier_context]
+      data[:data_from] = options[:type]
+      data
     end
 
     def rack_exception_data

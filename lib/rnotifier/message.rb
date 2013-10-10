@@ -31,11 +31,9 @@ module Rnotifier
         return false unless Config.valid?
 
         begin
-          Notifier.send_data(data, path)
+          return Notifier.send_data(data, path)
         rescue Exception => e
-          Rlogger.error("[EVENT NOTIFY] #{e.message}")
-          Rlogger.error("[EVENT NOTIFY] #{e.backtrace}")
-          false
+          Rlogger.exception(e, 'EVENT NOTIFY')
         end
       end
 
@@ -44,7 +42,7 @@ module Rnotifier
       end
 
       def app_env
-        @app_env ||= Config.get_app_env(:short)
+        @app_env ||= Config.basic_env
       end
     end
 
