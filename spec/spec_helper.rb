@@ -16,7 +16,7 @@ SimpleCov.start do
   add_filter '/spec/'
 end
 
-Coveralls.wear!
+#Coveralls.wear!
 
 $:.unshift(File.dirname(__FILE__) + '/../lib/')
 

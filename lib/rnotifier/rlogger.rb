@@ -26,8 +26,8 @@ module Rnotifier
       end
 
       def exception(e, tag = '')
-        self.error("[#{tag}] #{e.message}")
-        self.error("[#{tag}] #{e.backtrace}")
+        error("[#{tag}] #{e.message}")
+        error("[#{tag}] #{e.backtrace}")
         return false
       end
 

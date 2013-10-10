@@ -56,6 +56,16 @@ describe Rnotifier::Message do
     expect(Rnotifier::MessageStore.size).to eq 1
   end
 
+  it 'send messages in buik' do
+    stubs = stub_faraday_request({:path => Rnotifier::Config.messages_path})
+    messages = 2.times.collect{ Rnotifier::Message.new(@name, @data) }
+
+    status = Rnotifier::Message.bulk_notify(messages)
+
+    expect(status).to be_true
+    expect { stubs.verify_stubbed_calls }.to_not raise_error
+  end
+
   it 'app env should have time zone' do
     env = Rnotifier::Message.app_env
     expect(env[:time_zone]).not_to be_nil
