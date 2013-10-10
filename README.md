@@ -4,6 +4,7 @@ Events and Exception catcher libraray.
 
 [![Build Status](https://travis-ci.org/jiren/rnotifier.png?branch=master)](https://travis-ci.org/jiren/rnotifier) 
  [![Coverage Status](https://coveralls.io/repos/jiren/rnotifier/badge.png?branch=master)](https://coveralls.io/r/jiren/rnotifier?branch=master)
+ [![Code Climate](https://codeclimate.com/github/jiren/rnotifier.png)](https://codeclimate.com/github/jiren/rnotifier)
 
 ## Installation
 
