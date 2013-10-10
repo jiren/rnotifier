@@ -22,6 +22,10 @@ module Rnotifier
         DEFAULT[val]
       end
 
+      def []=(field, value)
+        self.send("#{field}=", value)
+      end
+
       def init
         Rlogger.init
         self.valid = false
@@ -59,8 +63,7 @@ module Rnotifier
       def init_igonore_options
         [:ignore_exceptions, :ignore_bots].each do |f|
           value = self.send(f)
-          value = value && value.is_a?(String) ? value.split(',').map(&:strip) : []
-          self.send("#{f}=", value)
+          self[f] = value.is_a?(String) ? value.split(',').map(&:strip) : []
         end
       end
 
@@ -71,7 +74,7 @@ module Rnotifier
         self.api_host ||= DEFAULT[:api_host]
 
         [:exception_path, :messages_path, :browser_path].each do |path|
-          self.send("#{path}=", "/#{DEFAULT[:api_version]}/#{DEFAULT[path]}")
+          self[path] = "/#{DEFAULT[:api_version]}/#{DEFAULT[path]}"
         end
       end
 

@@ -69,12 +69,10 @@ module Rnotifier
     end
 
     def alert(name, params, tags = {})
-      raise RnotifierException.new('params must be a Hash') unless params.is_a?(Hash)
       Rnotifier::Message.new(name, Rnotifier::Message::ALERT, params, tags[:tags]).notify 
     end
 
     def event(name, params, tags = {})
-      raise RnotifierException.new('params must be a Hash') unless params.is_a?(Hash)
       Rnotifier::Message.new(name, Rnotifier::Message::EVENT, params, tags[:tags]).enq
     end
 

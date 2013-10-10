@@ -7,6 +7,8 @@ module Rnotifier
     BENCHMARK = 2
 
     def initialize(name, type, data = {}, tags = nil)
+      raise RnotifierException.new('params must be a Hash') unless data.is_a?(Hash)
+
       @data = {
         :name => name, 
         :data => data,
