@@ -82,3 +82,5 @@ module Rnotifier
 
   end
 end
+
+Rnotifier::Config.load_benchmark_ext

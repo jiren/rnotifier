@@ -46,4 +46,24 @@ describe Rnotifier::Benchmark do
     expect(@excetion.backtrace.first).to match(/spec\/rnotifier\/benchmark_spec\.rb/)
   end
 
+  context('#benchmark_it') do
+
+    it 'benchmark for instance method' do
+      #TestBenchmark.benchmark_it :sum_square
+      result = TestBenchmark.new.sum_square(10)
+      
+      expect(result).to eq(45*45)
+      expect(Rnotifier::MessageStore.size).to eq 1
+    end
+
+    it 'benchmark for class method' do
+      #TestBenchmark.benchmark_it :sum_square_root
+      result = TestBenchmark.sum_square_root(10)
+      
+      expect(result).to eq(Math.sqrt(45))
+      expect(Rnotifier::MessageStore.size).to eq 1
+    end
+
+  end
+
 end

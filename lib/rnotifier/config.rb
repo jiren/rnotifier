@@ -104,6 +104,11 @@ module Rnotifier
         })
       end
 
+      def load_benchmark_ext
+        Object.send(:include, Rnotifier::BenchmarkMethods) unless Object.respond_to?(:benchmark)
+        Object.send(:include, Rnotifier::BenchmarkClassMethods) unless Object.respond_to?(:benchmark_it)
+      end
+
     end
   end
 end
