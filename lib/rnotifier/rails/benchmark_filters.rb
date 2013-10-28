@@ -6,16 +6,19 @@ module Rnotifier
 
     module ClassMethods
       def rnotifier_benchmarking(*args)
-        time_condition = nil
         arg = args.first
-        time_condition = arg.delete(:time_condition) || arg.delete('time_condition') if arg
+        time_condition = if arg
+                           arg.delete(:time_condition) || arg.delete('time_condition') 
+                         else
+                           nil
+                         end
 
-        self.send(:before_filter, args) do
+        self.send(:before_filter, arg) do
           @__bm_start_time = Time.now
           @__rn_b_token = Rnotifier::BenchmarkView.browser_token
         end
 
-        self.send(:after_filter, args) do
+        self.send(:after_filter, arg) do
           if @__bm_start_time
             bm_name = "#{params[:controller]}##{params[:action]}"
             opts = {:time_condition => time_condition, :b_token => @__rn_b_token}
